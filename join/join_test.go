@@ -1,4 +1,4 @@
-package main
+package join
 
 import (
 	"bytes"
@@ -23,11 +23,11 @@ func TestJoinTwoInputs(t *testing.T) {
 		{"inputs with differing # of lines", "1 a", "1 b\n2 c", "1 a b\n"},
 	}
 	for _, test := range tests {
-		var inputs [2]input
-		inputs[0].init(strings.NewReader(test.left), "left")
-		inputs[1].init(strings.NewReader(test.right), "right")
+		var inputs [2]Input
+		inputs[0].Init(strings.NewReader(test.left), "left")
+		inputs[1].Init(strings.NewReader(test.right), "right")
 		var output bytes.Buffer
-		err := join(inputs[:], &output)
+		err := Join(inputs[:], &output)
 		if err != nil {
 			t.Errorf("%s: unexpected error: %v", test.intent, err)
 		}
@@ -47,12 +47,12 @@ func TestJoinThreeInputs(t *testing.T) {
 		{"only some input match", "1 a", "2 b", "1 c", ""},
 	}
 	for _, test := range tests {
-		var inputs [3]input
-		inputs[0].init(strings.NewReader(test.left), "left")
-		inputs[1].init(strings.NewReader(test.mid), "mid")
-		inputs[2].init(strings.NewReader(test.right), "right")
+		var inputs [3]Input
+		inputs[0].Init(strings.NewReader(test.left), "left")
+		inputs[1].Init(strings.NewReader(test.mid), "mid")
+		inputs[2].Init(strings.NewReader(test.right), "right")
 		var output bytes.Buffer
-		err := join(inputs[:], &output)
+		err := Join(inputs[:], &output)
 		if err != nil {
 			t.Errorf("%s: unexpected error: %v", test.intent, err)
 		}
