@@ -9,9 +9,6 @@ import (
 	"github.com/nthery/gojoin/join"
 )
 
-// Number of files expected on command-line.
-const nfiles = 2
-
 var sep = flag.String("t", " ", "field separator")
 
 func main() {
@@ -23,23 +20,23 @@ func main() {
 	}
 
 	args := flag.Args()
-	if len(args) != 2 {
+	if len(args) < 2 {
 		usage()
 		os.Exit(1)
 	}
 
-	var inputs [nfiles]join.Input
-	for i := 0; i < nfiles; i++ {
-		f, err := os.OpenFile(args[i], os.O_RDONLY, 0)
+	inputs := make([]join.Input, 0, len(args))
+	for _, path := range args {
+		f, err := os.OpenFile(path, os.O_RDONLY, 0)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "gojoin: cannot open %v: %v", args[i], err)
+			fmt.Fprintf(os.Stderr, "gojoin: cannot open %v: %v\n", path, err)
 			os.Exit(1)
 		}
 		defer f.Close()
-		inputs[i] = join.NewInput(f, args[i])
+		inputs = append(inputs, join.NewInput(f, path))
 	}
 
-	err := join.Join(inputs[:], *sep, os.Stdout)
+	err := join.Join(inputs, *sep, os.Stdout)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "gojoin: error while joining files: %v\n", err)
 		os.Exit(1)
@@ -47,9 +44,5 @@ func main() {
 }
 
 func usage() {
-	out := "usage: gojoin"
-	for i := 1; i <= nfiles; i++ {
-		out += fmt.Sprintf(" file%d", i)
-	}
-	fmt.Fprintln(os.Stderr, out)
+	fmt.Fprintln(os.Stderr, "usage: gojoin [-t sep] file...")
 }
