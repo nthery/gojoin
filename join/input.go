@@ -18,10 +18,10 @@ type Input struct {
 	words []string
 }
 
-// Init initializes this input.
-func (in *Input) Init(r io.Reader, path string) {
-	in.rd = bufio.NewScanner(r)
-	in.path = path
+// NewInput constructs an input for the specified source.
+// path is the name of the file being read.  It is used for error reporting.
+func NewInput(r io.Reader, path string) Input {
+	return Input{rd: bufio.NewScanner(r), path: path}
 }
 
 // key returns the join key for the current line.

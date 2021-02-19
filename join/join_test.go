@@ -23,9 +23,10 @@ func TestJoinTwoInputs(t *testing.T) {
 		{"inputs with differing # of lines", "1 a", "1 b\n2 c", "1 a b\n"},
 	}
 	for _, test := range tests {
-		var inputs [2]Input
-		inputs[0].Init(strings.NewReader(test.left), "left")
-		inputs[1].Init(strings.NewReader(test.right), "right")
+		inputs := [2]Input{
+			NewInput(strings.NewReader(test.left), "left"),
+			NewInput(strings.NewReader(test.right), "right"),
+		}
 		var output bytes.Buffer
 		err := Join(inputs[:], &output)
 		if err != nil {
@@ -47,10 +48,11 @@ func TestJoinThreeInputs(t *testing.T) {
 		{"only some input match", "1 a", "2 b", "1 c", ""},
 	}
 	for _, test := range tests {
-		var inputs [3]Input
-		inputs[0].Init(strings.NewReader(test.left), "left")
-		inputs[1].Init(strings.NewReader(test.mid), "mid")
-		inputs[2].Init(strings.NewReader(test.right), "right")
+		inputs := [3]Input{
+			NewInput(strings.NewReader(test.left), "left"),
+			NewInput(strings.NewReader(test.mid), "mid"),
+			NewInput(strings.NewReader(test.right), "right"),
+		}
 		var output bytes.Buffer
 		err := Join(inputs[:], &output)
 		if err != nil {

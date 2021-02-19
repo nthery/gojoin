@@ -26,7 +26,7 @@ func main() {
 			os.Exit(1)
 		}
 		defer f.Close()
-		inputs[i].Init(f, args[i])
+		inputs[i] = join.NewInput(f, args[i])
 	}
 
 	err := join.Join(inputs[:], os.Stdout)
