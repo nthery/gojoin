@@ -12,11 +12,15 @@ import (
 
 // Join iterates over all input lines and generates lines containing all words
 // for lines with matching key.
-func Join(inputs []Input, output io.Writer) error {
+// Words are separated by sep in both inputs and output.
+func Join(inputs []Input, sep string, output io.Writer) error {
+	if len(sep) == 0 {
+		panic("separator must not be empty")
+	}
 	out := bufio.NewWriter(output)
 
 	for i := 0; i < len(inputs); i++ {
-		inputs[i].read()
+		inputs[i].read(sep)
 	}
 
 	ks := newKeySorter(inputs)
@@ -26,7 +30,7 @@ func Join(inputs []Input, output io.Writer) error {
 			highest := ks.highestInput()
 			for i := 0; i < len(inputs); i++ {
 				if i != highest {
-					inputs[i].read()
+					inputs[i].read(sep)
 				}
 			}
 			continue
@@ -34,15 +38,15 @@ func Join(inputs []Input, output io.Writer) error {
 
 		fmt.Fprintf(out, "%s", inputs[0].words[0])
 		for i := 0; i < len(inputs); i++ {
-			ws := strings.Join(inputs[i].words[1:], " ")
+			ws := strings.Join(inputs[i].words[1:], sep)
 			if len(ws) > 0 {
-				fmt.Fprintf(out, " %s", ws)
+				fmt.Fprintf(out, "%s%s", sep, ws)
 			}
 		}
 		fmt.Fprintln(out)
 
 		for i := 0; i < len(inputs); i++ {
-			inputs[i].read()
+			inputs[i].read(sep)
 		}
 	}
 

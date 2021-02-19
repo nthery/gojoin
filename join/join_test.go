@@ -28,7 +28,7 @@ func TestJoinTwoInputs(t *testing.T) {
 			NewInput(strings.NewReader(test.right), "right"),
 		}
 		var output bytes.Buffer
-		err := Join(inputs[:], &output)
+		err := Join(inputs[:], " ", &output)
 		if err != nil {
 			t.Errorf("%s: unexpected error: %v", test.intent, err)
 		}
@@ -54,7 +54,7 @@ func TestJoinThreeInputs(t *testing.T) {
 			NewInput(strings.NewReader(test.right), "right"),
 		}
 		var output bytes.Buffer
-		err := Join(inputs[:], &output)
+		err := Join(inputs[:], " ", &output)
 		if err != nil {
 			t.Errorf("%s: unexpected error: %v", test.intent, err)
 		}
@@ -62,5 +62,22 @@ func TestJoinThreeInputs(t *testing.T) {
 		if got != test.want {
 			t.Errorf("%s: want: %q got: %q", test.intent, test.want, got)
 		}
+	}
+}
+
+func TestNonDefaultSeparator(t *testing.T) {
+	inputs := [2]Input{
+		NewInput(strings.NewReader("foo|bar"), "left"),
+		NewInput(strings.NewReader("foo|baz|zap"), "right"),
+	}
+	var output bytes.Buffer
+	err := Join(inputs[:], "|", &output)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	got := output.String()
+	want := "foo|bar|baz|zap\n"
+	if got != want {
+		t.Errorf("want: %q got: %q", want, got)
 	}
 }

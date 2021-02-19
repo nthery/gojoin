@@ -29,7 +29,7 @@ func main() {
 		inputs[i] = join.NewInput(f, args[i])
 	}
 
-	err := join.Join(inputs[:], os.Stdout)
+	err := join.Join(inputs[:], " ", os.Stdout)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "gojoin: error while joining files: %v\n", err)
 		os.Exit(1)

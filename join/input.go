@@ -40,8 +40,9 @@ func (in *Input) err() error {
 	return in.rd.Err()
 }
 
-// read reads up to the the next non empty input line and splits it in words.
-func (in *Input) read() {
+// read reads up to the the next non empty input line and splits it in words
+// separarated by sep.
+func (in *Input) read(sep string) {
 	for {
 		if !in.rd.Scan() {
 			in.words = in.words[0:0]
@@ -53,7 +54,7 @@ func (in *Input) read() {
 			continue
 		}
 
-		in.words = strings.Split(line, " ")
+		in.words = strings.Split(line, sep)
 		return
 	}
 }
